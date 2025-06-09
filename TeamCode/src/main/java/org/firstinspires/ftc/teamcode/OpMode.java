@@ -30,17 +30,38 @@ public class OpMode extends LinearOpMode {
 
 
     @Override
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
         telemetry.setMsTransmissionInterval(11);
 
         limelight.pipelineSwitch(0);
 
+        limelight.start();
+
+        waitForStart();
+        while (opModeIsActive()) {
+
+                    LLStatus status = limelight.getStatus();
+            telemetry.addData("Name", "%s",
+                    status.getName());
+
+            telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
+                    status.getTemp(), status.getCpu(),(int)status.getFps());
+
+            telemetry.addData("Pipeline", "Index: %d, Type: %s",
+                    status.getPipelineIndex(), status.getPipelineType());
+
+            LLResult result = limelight.getLatestResult();
+
+
+        }
+    }
+}
+
         /*
-         * Starts polling for data.  If you neglect to call start(), getLatestResult() will return null.
-         */
+         Starts polling for data.  If you neglect to call start(), getLatestResult() will return null.
+
         limelight.start();
 
         telemetry.addData(">", "Robot Ready.  Press Play.");
@@ -116,3 +137,4 @@ public class OpMode extends LinearOpMode {
         limelight.stop();
     }
 }
+*/
